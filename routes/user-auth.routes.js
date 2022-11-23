@@ -1,5 +1,5 @@
 const express = require('express');
-const bcrypt = require('bcryptjs');
+const {genSaltSync, hashSync, compareSync} = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User.model');
 
@@ -36,8 +36,8 @@ router.post('/signup', async (req, res, next) => {
             return;
         }
 
-        const salt = bcrypt.genSaltSync(11);
-        const hashedPassword = bcrypt.hashSync(password, salt)
+        const salt = genSaltSync(11);
+        const hashedPassword = hashSync(password, salt)
 
         // Create a new user
         const newUser = await User.create({ username, email, password: hashedPassword })
@@ -51,7 +51,52 @@ router.post('/signup', async (req, res, next) => {
  
  
 // POST  /user-auth/login
-// ...
+// Verifies email and password and returns a JWT.
+
+router.post('/login', async (req, res, next) => {
+
+    try {
+
+        const { email, password } = req.body;
+
+        if (email === '' || password === '') {
+            res.status(400).json({ message: 'Provide email and password' });
+            return;
+        }
+
+        const currentUser = await User.findOne({ email })
+
+        if (currentUser) {
+            if (compareSync(password, currentUser.password)) {
+                
+                const { _id, email, username } = currentUser;
+                const payload = { _id, email, username };
+                
+                console.log(payload);
+
+                const authToken = jwt.sign(
+                    payload,
+                    process.env.TOKEN_SECRET,
+                    { algorithm: 'HS256', expiresIn: '6h' }
+                );
+
+                console.log(authToken);
+
+                res.status(200).json({ authToken });
+
+            } else {
+                res.status(400).json({ message: 'Unable to authenticate the user' });
+            }
+        } else {
+            res.status(401).json({ message: 'User not found' });
+        }
+        
+    } catch (error) {
+        res.status(500).json({ message: 'Internal Server Error' });
+        console.log(error);
+    }
+
+})
  
  
 // GET  /user-auth/verify
