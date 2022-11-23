@@ -2,7 +2,8 @@ const router = require("express").Router();
 const { genSaltSync, hashSync, compareSync } = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 const Host = require("../models/Host.model");
-
+const {isHostAuthenticated} = require("../middleware/jwt.host-middleware");
+const bcrypt = require('bcryptjs');
 
 router.post("/signup", async (req, res) => {
     try {
@@ -62,7 +63,7 @@ router.post("/login", async (req, res) => {
                     process.env.TOKEN_SECRET,
                     { algorithm: 'HS256', expiresIn: "6h" }
                 )
-                res.status(200).json({ authToken: authToken });
+                res.status(200).json({ authToken });
             } else {
                 res.status(401).json({ message: "Unable to authenticate the user" });
             }
@@ -72,6 +73,11 @@ router.post("/login", async (req, res) => {
         res.status(500).json({ message: "Internal Server Error" })
     }
 });
+
+router.get('/verify', isHostAuthenticated, (res, req) => {
+    console.log(`req.payload`, req.payload);
+    res.status(200).json(req.payload);
+})
 
 
 module.exports = router;
