@@ -9,7 +9,7 @@ router.post("/signup", async (req, res) => {
         const {barName, address, email, password} = req.body;
         
         // check that all inputs are filled in
-        if (!email || !password || !email || !password) {
+        if (!barName || !address || !email || !password) {
             res.status(400).json({ message: "Please fill in all the fields" });
             return;
         }
@@ -36,5 +36,42 @@ router.post("/signup", async (req, res) => {
     }
     
 });
+
+router.post("/login", async (req, res) => {
+    const {email, password} = req.body;
+
+     // check that all inputs are filled in
+    if (!email || !password) {
+        res.status(400).json({ message: "Please fill in all the fields" });
+        return;
+    }
+
+    const currentUser = await Host.findOne({email})
+    try {
+        if (!currentUser) {
+            res.status(401).json({ message: "User not found" })
+            return;
+        } else {
+            const correctPassword = bcrypt.compareSync(password, currentUser.password);
+            if (correctPassword) {
+                const {_id, email, name} = currentUser;
+                
+                const payload = {_id, email, name};
+                const authToken = jwt.sign(
+                    payload, 
+                    process.env.TOKEN_SECRET,
+                    { algorithm: 'HS256', expiresIn: "6h" }
+                )
+                res.status(200).json({ authToken: authToken });
+            } else {
+                res.status(401).json({ message: "Unable to authenticate the user" });
+            }
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: "Internal Server Error" })
+    }
+});
+
 
 module.exports = router;
