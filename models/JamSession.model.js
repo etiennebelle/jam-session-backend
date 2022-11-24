@@ -31,4 +31,4 @@ const jamSessionSchema = new Schema(
 
 const JamSession = model("JamSession", jamSessionSchema);
 
-module.exports = Host;
+module.exports = JamSession;
