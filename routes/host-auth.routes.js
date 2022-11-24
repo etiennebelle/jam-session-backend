@@ -59,7 +59,7 @@ router.post("/login", async (req, res) => {
                 
                 const payload = {_id, email, name};
                 const authToken = jwt.sign(
-                    payload, 
+                    {data: payload}, 
                     process.env.TOKEN_SECRET,
                     { algorithm: 'HS256', expiresIn: "6h" }
                 )
@@ -74,8 +74,9 @@ router.post("/login", async (req, res) => {
     }
 });
 
-router.get('/verify', isHostAuthenticated, (res, req) => {
+router.get('/verify', isHostAuthenticated, (req, res) => {
     console.log(`req.payload`, req.payload);
+   //console.log(req)
     res.status(200).json(req.payload);
 })
 

@@ -8,9 +8,9 @@ const isHostAuthenticated = jwt({
   });
    
   function getTokenFromHeaders (req) {
-  
+    console.log(req.headers)
     if (req.headers.authorization && req.headers.authorization.split(" ")[0] === "Bearer") {
-   
+        console.log('console log true', req.headers.authorization.split(" ")[1])
       const token = req.headers.authorization.split(" ")[1];
       return token;
     } 
