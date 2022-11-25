@@ -22,6 +22,9 @@ const jamSessionSchema = new Schema(
     description: {
         type: String, 
         required: true
+    }, 
+    host: {
+        type: Schema.Types.ObjectId, ref: 'Host' 
     }
   },
   {

@@ -1,11 +1,13 @@
 const router = require("express").Router();
 const JamSession = require("../models/JamSession.model");
+const Host = require("../models/Host.model");
 
 router.post("/create-jam-session", async (req, res) => {
-    const {jamSessionName, date, capacity, genre, description} = req.body;
+    const {jamSessionName, date, capacity, genre, description, host} = req.body;
 
     try {
-        await JamSession.create({jamSessionName, date, capacity, genre, description})
+        const createdJamSession = await JamSession.create({jamSessionName, date, capacity, genre, description})
+        await Host.findOneAndUpdate(host, {$push: {jamSessions: createdJamSession._id}})
         res.status(201).json({message: "Jam Session created successfully"});
     } catch (error) {
         console.log(error)

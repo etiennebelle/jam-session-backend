@@ -24,6 +24,9 @@ const hostSchema = new Schema(
     password: {
         type: String, 
         required: true
+    }, 
+    jamSessions: {
+      type: Schema.Types.ObjectId, ref: 'JamSession'
     }
   },
   {
