@@ -11,6 +11,10 @@ const jamSessionSchema = new Schema(
         type: Date, 
         required: true,
     },
+    time: {
+        type: String, 
+        required: true,
+    },
     capacity: {
         type: Number, 
         required: true, 
@@ -20,6 +24,10 @@ const jamSessionSchema = new Schema(
         required: true
     },
     description: {
+        type: String, 
+        required: true
+    }, 
+    image: {
         type: String, 
         required: true
     }, 

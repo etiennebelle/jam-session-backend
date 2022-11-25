@@ -73,15 +73,11 @@ router.post('/login', async (req, res, next) => {
                 const { _id, email, username } = currentUser;
                 const payload = { _id, email, username };
                 
-                console.log(payload);
-
                 const authToken = jwt.sign(
                     {data: payload},
                     process.env.TOKEN_SECRET,
                     { algorithm: 'HS256', expiresIn: '6h' }
                 );
-
-                console.log(authToken);
 
                 res.status(200).json({ authToken });
 
@@ -102,7 +98,6 @@ router.post('/login', async (req, res, next) => {
  
 // GET  /user-auth/verify
 router.get('/verify', isAuthenticated, (req, res, next) => {
-    console.log(`req.payload`, req.payload);
     res.status(200).json(req.payload);
 })
 

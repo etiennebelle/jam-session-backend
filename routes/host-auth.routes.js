@@ -75,8 +75,6 @@ router.post("/login", async (req, res) => {
 });
 
 router.get('/verify', isHostAuthenticated, (req, res) => {
-    console.log(`req.payload`, req.payload);
-   //console.log(req)
     res.status(200).json(req.payload);
 })
 
