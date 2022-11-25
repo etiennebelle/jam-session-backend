@@ -25,9 +25,7 @@ const hostSchema = new Schema(
         type: String, 
         required: true
     }, 
-    jamSessions: {
-      type: Schema.Types.ObjectId, ref: 'JamSession'
-    }
+    jamSessions: [{type: Schema.Types.ObjectId, ref: 'JamSession'}]
   },
   {
     timestamps: true
