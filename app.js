@@ -21,9 +21,6 @@ const indexRoutes = require("./routes/index.routes");
 app.use("/api", indexRoutes);
 
 
-const hostAuthRoutes = require('./routes/host-auth.routes');
-app.use('/host', hostAuthRoutes);
-
 const hostRoutes = require('./routes/host.routes');
 app.use('/host', hostRoutes);
 
