@@ -96,5 +96,17 @@ router.post("/create-jam-session", uploader.single("imageUrl"), async (req, res)
     }
 });
 
+router.get('/:id', async(req, res, next) => {
+    try {
+        const { id } = req.params;
+        
+        const currentHost = await Host.findById(id);
+        console.log(currentHost);
+        res.status(200).json(currentHost);
+
+    } catch (error) {
+        console.log(error)
+    }
+})
 
 module.exports = router;
