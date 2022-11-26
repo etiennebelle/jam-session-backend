@@ -18,8 +18,7 @@ require("./config")(app);
 
 // 👇 Start handling routes here
 const indexRoutes = require("./routes/index.routes");
-app.use("/api", indexRoutes);
-
+app.use("/", indexRoutes);
 
 const hostRoutes = require('./routes/host.routes');
 app.use('/host', hostRoutes);
