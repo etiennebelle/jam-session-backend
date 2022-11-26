@@ -96,8 +96,6 @@ router.post("/create-jam-session", uploader.single("imageUrl"), async (req, res)
     }
 });
 
-<<<<<<< HEAD
-=======
 router.get('/:id', async(req, res, next) => {
     try {
         const { id } = req.params;
@@ -110,6 +108,5 @@ router.get('/:id', async(req, res, next) => {
         console.log(error)
     }
 })
->>>>>>> master
 
 module.exports = router;

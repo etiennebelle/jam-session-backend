@@ -7,10 +7,8 @@ router.get("/", (req, res, next) => {
 });
 
 router.get("/events", async (req, res, next) => {
-  const events = await JamSession.find();
-  const eventHost = await Host.findOne(JamSession.host);
-  console.log('eventHost:', eventHost);
-  // console.log('events:', events);
+  const events = await JamSession.find().populate('host');
+  console.log('events:', events);
   res.json(events);
 })
 
