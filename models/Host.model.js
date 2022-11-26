@@ -13,6 +13,11 @@ const hostSchema = new Schema(
         trim: true, 
         required: true,
     },
+    town: {
+        type: String, 
+        trim: true, 
+        required: true,
+    },
     email: {
         type: String, 
         required: true, 

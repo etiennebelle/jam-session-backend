@@ -9,10 +9,10 @@ const uploader = require('../middleware/cloudinary.config.js');
 
 router.post("/signup", async (req, res) => {
     try {
-        const {barName, address, email, password} = req.body;
+        const {barName, address, town, email, password} = req.body;
         
         // check that all inputs are filled in
-        if (!barName || !address || !email || !password) {
+        if (!barName || !address || !town || !email || !password) {
             res.status(400).json({ message: "Please fill in all the fields" });
             return;
         }
@@ -27,7 +27,7 @@ router.post("/signup", async (req, res) => {
         const salt = genSaltSync(11);
         const hashedPassword = hashSync(password, salt);
     
-        await Host.create({barName, address, email, password: hashedPassword})
+        await Host.create({barName, address, town, email, password: hashedPassword})
         res.status(201).json({message: "Host created successfully"});
     } catch (error) {
         console.log(error)
