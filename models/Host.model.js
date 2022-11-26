@@ -13,11 +13,14 @@ const hostSchema = new Schema(
         trim: true, 
         required: true,
     },
+<<<<<<< HEAD
     town: {
         type: String, 
         trim: true, 
         required: true,
     },
+=======
+>>>>>>> master
     email: {
         type: String, 
         required: true, 
