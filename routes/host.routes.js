@@ -100,7 +100,7 @@ router.get('/:id', async(req, res, next) => {
     try {
         const { id } = req.params;
         
-        const currentHost = await Host.findById(id);
+        const currentHost = await Host.findById(id).populate('jamSessions');
         console.log(currentHost);
         res.status(200).json(currentHost);
 
