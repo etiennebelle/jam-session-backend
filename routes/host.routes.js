@@ -6,6 +6,7 @@ const {isHostAuthenticated} = require("../middleware/jwt.host-middleware");
 const bcrypt = require('bcryptjs');
 const JamSession = require("../models/JamSession.model");
 const uploader = require('../middleware/cloudinary.config.js');
+const mongoose = require('mongoose');
 
 router.post("/signup", async (req, res) => {
     try {
@@ -88,8 +89,8 @@ router.post("/create-jam-session", uploader.single("imageUrl"), async (req, res)
 
     try {
         const createdJamSession = await JamSession.create({jamSessionName, date, time, capacity, genre, description, host, image: req.file.path})
-        console.log('host before update', host)
-        await Host.findOneAndUpdate({_id : host}, {$push: {jamSessions: createdJamSession._id}})
+        const hostId = mongoose.Types.ObjectId(host);
+        await Host.findByIdAndUpdate( hostId, {$push: {jamSessions: createdJamSession._id}})
         res.status(201).json({message: "Jam Session created successfully"});
     } catch (error) {
         console.log(error)
