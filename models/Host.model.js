@@ -8,16 +8,11 @@ const hostSchema = new Schema(
         required: true,
         unique: true
     },
-    street: {
+    address: {
         type: String, 
         trim: true, 
         required: true,
         unique: true
-    },
-    town: {
-      type: String,
-      trim: true,
-      required: true,
     },
     email: {
         type: String, 
