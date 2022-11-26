@@ -88,7 +88,8 @@ router.post("/create-jam-session", uploader.single("imageUrl"), async (req, res)
 
     try {
         const createdJamSession = await JamSession.create({jamSessionName, date, time, capacity, genre, description, host, image: req.file.path})
-        await Host.findOneAndUpdate(host, {$push: {jamSessions: createdJamSession._id}})
+        console.log('host before update', host)
+        await Host.findOneAndUpdate({_id : host}, {$push: {jamSessions: createdJamSession._id}})
         res.status(201).json({message: "Jam Session created successfully"});
     } catch (error) {
         console.log(error)
