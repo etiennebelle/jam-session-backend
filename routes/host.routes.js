@@ -124,7 +124,7 @@ router.delete('/:id', isHostAuthenticated, async (req, res) => {
 
 
 /// GET Current host info 
-router.get('/:id', isHostAuthenticated, async(req, res, next) => {
+router.get('/:id', async(req, res, next) => {
     try {
         const { id } = req.params;
         

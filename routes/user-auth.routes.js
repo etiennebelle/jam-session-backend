@@ -108,7 +108,7 @@ router.get('/verify', isAuthenticated, (req, res, next) => {
 
 
 // GET User data one the profile page
-router.get('/:id', async(req, res, next) => {
+router.get('/:id', isAuthenticated, async(req, res, next) => {
     try {
         const { id } = req.params;
         

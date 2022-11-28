@@ -23,7 +23,7 @@ router.get("/events/:id", async (req, res, next) => {
   }
 })
 
-router.put('/events/:id', async (req, res) => {
+router.put('/events/:id', isAuthenticated, async (req, res) => {
   console.log(req.body);
   try {
     const { id } = req.params;
@@ -35,7 +35,7 @@ router.put('/events/:id', async (req, res) => {
   }
 })
 
-router.delete('/events/:id', async (req, res) => {
+router.delete('/events/:id', isAuthenticated, async (req, res) => {
   console.log(req.body);
   try {
     const { id } = req.params;
