@@ -84,7 +84,7 @@ router.get('/verify', isHostAuthenticated, (req, res) => {
 })
 
 /// POST Create jam session
-router.post("/create-jam-session", uploader.single("imageUrl"), async (req, res) => {
+router.post("/jam-sessions", uploader.single("imageUrl"), async (req, res) => {
     console.log('file is: ', req.file)
     console.log('body is: ', req.body)
 
@@ -102,12 +102,17 @@ router.post("/create-jam-session", uploader.single("imageUrl"), async (req, res)
 });
 
 /// PUT- Edit jam session
-router.put('/jam-sessions/:id', async (req, res) => {
+router.put('/jam-sessions/:id', uploader.single("imageUrl"), async (req, res) => {
     const { id } = req.params;
     const body = req.body
 
-    await JamSession.findByIdAndUpdate(id, body, {new:true})
-    res.status(200).json({ message: "Jam Session Edited successfully" })
+    try {
+        const response = await JamSession.findByIdAndUpdate(id, body, {new:true})
+        res.status(200).json(response)
+    } catch (error) {
+        console.log(error)
+    }
+    
 })
 
 /// DELETE - Delete jam session
@@ -124,7 +129,6 @@ router.get('/:id', async(req, res, next) => {
         const { id } = req.params;
         
         const currentHost = await Host.findById(id).populate('jamSessions');
-        console.log(currentHost);
         res.status(200).json(currentHost);
 
     } catch (error) {
