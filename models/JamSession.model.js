@@ -31,7 +31,8 @@ const jamSessionSchema = new Schema(
         type: String, 
         required: true
     }, 
-    host: {type: Schema.Types.ObjectId, ref: 'Host'}
+    host: {type: Schema.Types.ObjectId, ref: 'Host'},
+    players: [{type: Schema.Types.ObjectId, ref: 'User'}]
   },
   {
     timestamps: true
