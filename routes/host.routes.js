@@ -84,7 +84,7 @@ router.get('/verify', isHostAuthenticated, (req, res) => {
 })
 
 /// POST Create jam session
-router.post("/jam-sessions", uploader.single("imageUrl"), async (req, res) => {
+router.post("/jam-sessions", isHostAuthenticated, uploader.single("imageUrl"), async (req, res) => {
     console.log('file is: ', req.file)
     console.log('body is: ', req.body)
 
@@ -102,7 +102,7 @@ router.post("/jam-sessions", uploader.single("imageUrl"), async (req, res) => {
 });
 
 /// PUT- Edit jam session
-router.put('/jam-sessions/:id', uploader.single("imageUrl"), async (req, res) => {
+router.put('/jam-sessions/:id', isHostAuthenticated, uploader.single("imageUrl"), async (req, res) => {
     const { id } = req.params;
     const body = req.body
 
@@ -116,7 +116,7 @@ router.put('/jam-sessions/:id', uploader.single("imageUrl"), async (req, res) =>
 })
 
 /// DELETE - Delete jam session
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', isHostAuthenticated, async (req, res) => {
     const { id } = req.params;
     await JamSession.findByIdAndDelete(id)
     res.status(200).json({ message: "Jam Session Deleted successfully" })
@@ -124,7 +124,7 @@ router.delete('/:id', async (req, res) => {
 
 
 /// GET Current host info 
-router.get('/:id', async(req, res, next) => {
+router.get('/:id', isHostAuthenticated, async(req, res, next) => {
     try {
         const { id } = req.params;
         
