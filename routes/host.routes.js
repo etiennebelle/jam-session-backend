@@ -101,8 +101,14 @@ router.post("/create-jam-session", uploader.single("imageUrl"), async (req, res)
     }
 });
 
-/// POST- Edit jam session
+/// PUT- Edit jam session
+router.put('/jam-sessions/:id', async (req, res) => {
+    const { id } = req.params;
+    const body = req.body
 
+    await JamSession.findByIdAndUpdate(id, body, {new:true})
+    res.status(200).json({ message: "Jam Session Edited successfully" })
+})
 
 /// DELETE - Delete jam session
 router.delete('/:id', async (req, res) => {
