@@ -20,7 +20,8 @@ const userSchema = new Schema(
     },
     instrument: {
       type: [String],
-    }
+    },
+    jamSessions: [{type: Schema.Types.ObjectId, ref: 'JamSession'}]
   },
   {
     timestamps: true
