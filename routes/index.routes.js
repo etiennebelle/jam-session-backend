@@ -31,6 +31,7 @@ router.put('/events/:id', isAuthenticated, async (req, res) => {
     const body = req.body;
     
     await JamSession.findByIdAndUpdate(id, { $push: { players: body.id } })
+    await User.findByIdAndUpdate(body.id, { $push: { jamSessions: id } })
     res.status(200).json({ message: "Player added successfully" })
   } catch (error) {
     console.log(error);
@@ -43,6 +44,7 @@ router.delete('/events/:id', isAuthenticated, async (req, res) => {
     const { id } = req.params;
     const body = req.body;
     await JamSession.findByIdAndUpdate(id, { $pull: { players: body.id } })
+    await User.findByIdAndUpdate(body.id, { $pull: { jamSessions: id } })
     res.status(200).json({ message: "Player removed successfully" })
   } catch (error) {
     console.log(error);
