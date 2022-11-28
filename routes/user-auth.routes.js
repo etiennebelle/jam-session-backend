@@ -113,7 +113,6 @@ router.get('/:id', async(req, res, next) => {
         const { id } = req.params;
         
         const currentUser = await User.findById(id);
-        console.log(currentUser);
         res.status(200).json(currentUser);
 
     } catch (error) {

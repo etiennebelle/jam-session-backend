@@ -6,7 +6,9 @@ const {isHostAuthenticated} = require("../middleware/jwt.host-middleware");
 const bcrypt = require('bcryptjs');
 const JamSession = require("../models/JamSession.model");
 const uploader = require('../middleware/cloudinary.config.js');
+const mongoose = require('mongoose');
 
+/// POST Signup 
 router.post("/signup", async (req, res) => {
     try {
         const {barName, address, town, email, password} = req.body;
@@ -40,6 +42,7 @@ router.post("/signup", async (req, res) => {
     
 });
 
+/// POST Login
 router.post("/login", async (req, res) => {
     const {email, password} = req.body;
 
@@ -80,15 +83,17 @@ router.get('/verify', isHostAuthenticated, (req, res) => {
     res.status(200).json(req.payload);
 })
 
-router.post("/create-jam-session", uploader.single("imageUrl"), async (req, res) => {
+/// POST Create jam session
+router.post("/jam-sessions", uploader.single("imageUrl"), async (req, res) => {
     console.log('file is: ', req.file)
     console.log('body is: ', req.body)
 
     const {jamSessionName, date, time, capacity, genre, description, host, players} = req.body;
 
     try {
-        const createdJamSession = await JamSession.create({jamSessionName, date, time, capacity, genre, description, host, image: req.file.path, players})
-        await Host.findOneAndUpdate(host, {$push: {jamSessions: createdJamSession._id}})
+        const createdJamSession = await JamSession.create({jamSessionName, date, time, capacity, genre, description, host, image: req.file.path})
+        const hostId = mongoose.Types.ObjectId(host);
+        await Host.findByIdAndUpdate( hostId, {$push: {jamSessions: createdJamSession._id}})
         res.status(201).json({message: "Jam Session created successfully"});
     } catch (error) {
         console.log(error)
@@ -96,12 +101,34 @@ router.post("/create-jam-session", uploader.single("imageUrl"), async (req, res)
     }
 });
 
+/// PUT- Edit jam session
+router.put('/jam-sessions/:id', uploader.single("imageUrl"), async (req, res) => {
+    const { id } = req.params;
+    const body = req.body
+
+    try {
+        const response = await JamSession.findByIdAndUpdate(id, body, {new:true})
+        res.status(200).json(response)
+    } catch (error) {
+        console.log(error)
+    }
+    
+})
+
+/// DELETE - Delete jam session
+router.delete('/:id', async (req, res) => {
+    const { id } = req.params;
+    await JamSession.findByIdAndDelete(id)
+    res.status(200).json({ message: "Jam Session Deleted successfully" })
+})
+
+
+/// GET Current host info 
 router.get('/:id', async(req, res, next) => {
     try {
         const { id } = req.params;
         
         const currentHost = await Host.findById(id).populate('jamSessions');
-        console.log(currentHost);
         res.status(200).json(currentHost);
 
     } catch (error) {
