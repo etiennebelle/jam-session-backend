@@ -105,7 +105,7 @@ router.post("/create-jam-session", uploader.single("imageUrl"), async (req, res)
 
 
 /// DELETE - Delete jam session
-router.delete('/jam-sessions/:id', async (req, res) => {
+router.delete('/:id', async (req, res) => {
     const { id } = req.params;
     await JamSession.findByIdAndDelete(id)
     res.status(200).json({ message: "Jam Session Deleted successfully" })
