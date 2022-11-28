@@ -8,6 +8,7 @@ const JamSession = require("../models/JamSession.model");
 const uploader = require('../middleware/cloudinary.config.js');
 const mongoose = require('mongoose');
 
+/// POST Signup 
 router.post("/signup", async (req, res) => {
     try {
         const {barName, address, town, email, password} = req.body;
@@ -41,6 +42,7 @@ router.post("/signup", async (req, res) => {
     
 });
 
+/// POST Login
 router.post("/login", async (req, res) => {
     const {email, password} = req.body;
 
@@ -81,6 +83,7 @@ router.get('/verify', isHostAuthenticated, (req, res) => {
     res.status(200).json(req.payload);
 })
 
+/// POST Create jam session
 router.post("/create-jam-session", uploader.single("imageUrl"), async (req, res) => {
     console.log('file is: ', req.file)
     console.log('body is: ', req.body)
@@ -98,6 +101,18 @@ router.post("/create-jam-session", uploader.single("imageUrl"), async (req, res)
     }
 });
 
+/// POST- Edit jam session
+
+
+/// DELETE - Delete jam session
+router.delete('/jam-sessions/:id', async (req, res) => {
+    const { id } = req.params;
+    await JamSession.findByIdAndDelete(id)
+    res.status(200).json({ message: "Jam Session Deleted successfully" })
+})
+
+
+/// GET Current host info 
 router.get('/:id', async(req, res, next) => {
     try {
         const { id } = req.params;
