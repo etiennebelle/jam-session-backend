@@ -2,6 +2,7 @@ const router = require("express").Router();
 const JamSession = require('../models/JamSession.model');
 const Host = require('../models/Host.model');
 const User = require('../models/User.model');
+const { isAuthenticated } = require('../middleware/jwt user-middleware');
 
 router.get("/", (req, res, next) => {
   res.json("All good in here");
@@ -28,6 +29,7 @@ router.put('/events/:id', isAuthenticated, async (req, res) => {
   try {
     const { id } = req.params;
     const body = req.body;
+    
     await JamSession.findByIdAndUpdate(id, { $push: { players: body.id } })
     res.status(200).json({ message: "Player added successfully" })
   } catch (error) {
