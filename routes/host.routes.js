@@ -91,7 +91,7 @@ router.post("/jam-sessions", isHostAuthenticated, uploader.single("imageUrl"), a
     const {jamSessionName, date, time, capacity, genre, description, host, players} = req.body;
 
     try {
-        const createdJamSession = await JamSession.create({jamSessionName, date, time, capacity, genre, description, host, image: req.file.path})
+        const createdJamSession = await JamSession.create({jamSessionName, date, time, capacity, genre, description, host, image: req.file.path}, players)
         const hostId = mongoose.Types.ObjectId(host);
         await Host.findByIdAndUpdate( hostId, {$push: {jamSessions: createdJamSession._id}})
         res.status(201).json({message: "Jam Session created successfully"});
