@@ -32,9 +32,18 @@ router.put('/events/:id', isAuthenticated, async (req, res) => {
   try {
     const { id } = req.params;
     const body = req.body;
+
+    const jamSess = await JamSession.findById(id)
+    const jamSessPlayers = Array.from(new Set([...jamSess.players.map((player)=>player._id.toString()), body.id]))
+    console.log(jamSessPlayers)
     
-    await JamSession.findByIdAndUpdate(id, { $push: { players: body.id } })
-    await User.findByIdAndUpdate(body.id, { $push: { jamSessions: id } })
+    await JamSession.findByIdAndUpdate(id, { players: jamSessPlayers } )
+
+    const user = await User.findById(body.id)
+    ////Do samere 
+    const userJamSess = Array.from(new Set([...user.jamSessions, id]))
+
+    await User.findByIdAndUpdate(body.id, { jamSessions: userJamSess } )
     res.status(200).json({ message: "Player added successfully" })
   } catch (error) {
     console.log(error);
@@ -55,6 +64,17 @@ router.delete('/events/:id', isAuthenticated, async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" })
 
   }
+})
+
+router.get("/locations", async (req, res, next) => {
+  try {
+    const allLocations = await Host.find();
+    res.status(200).json(allLocations);
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ message: "Internal Server Error" })
+  }
+
 })
 
 router.get("/locations/:id", async (req, res, next) => {
