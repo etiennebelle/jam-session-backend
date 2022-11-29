@@ -39,9 +39,8 @@ router.put('/events/:id', isAuthenticated, async (req, res) => {
     await JamSession.findByIdAndUpdate(id, { players: jamSessPlayers } )
 
     const user = await User.findById(body.id)
-    ////Do samere 
 
-    const userJamSess = Array.from(new Set([...user.jamSessions.map((player)=>player._id.toString()), id]))
+    const userJamSess = Array.from(new Set([...user.jamSessions.map((jamSess)=>jamSess._id.toString()), id]))
 
     await User.findByIdAndUpdate(body.id, { jamSessions: userJamSess } )
     res.status(200).json({ message: "Player added successfully" })
