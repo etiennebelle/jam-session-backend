@@ -112,7 +112,7 @@ router.get('/:id', isAuthenticated, async(req, res, next) => {
     try {
         const { id } = req.params;
         
-        const currentUser = await User.findById(id);
+        const currentUser = await User.findById(id).populate('jamSessions');
         res.status(200).json(currentUser);
 
     } catch (error) {
