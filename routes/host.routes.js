@@ -105,10 +105,12 @@ router.post("/jam-sessions", isHostAuthenticated, uploader.single("imageUrl"), a
 router.put('/jam-sessions/:id', isHostAuthenticated, uploader.single("imageUrl"), async (req, res) => {
     const { id } = req.params;
     const body = req.body
+    console.log(req.payload)
 
     try {
         const response = await JamSession.findByIdAndUpdate(id, body, {new:true})
-        res.status(200).json(response)
+        const allJamSess = await Host.findById(req.payload.data._id).populate('jamSessions')
+        res.status(200).json(allJamSess)
     } catch (error) {
         console.log(error)
     }
