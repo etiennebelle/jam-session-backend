@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node server.js",
+    "start": "nodemon server.js",
     "dev": "nodemon server.js"
   },
   "dependencies": {
@@ -19,9 +19,7 @@
     "mongoose": "^6.7.2",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
-    "multer-storage-cloudinary": "^4.0.0"
-  },
-  "devDependencies": {
+    "multer-storage-cloudinary": "^4.0.0",
     "nodemon": "^2.0.20"
   }
 }
