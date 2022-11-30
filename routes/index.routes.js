@@ -6,7 +6,8 @@ const { isAuthenticated } = require('../middleware/jwt user-middleware');
 
 router.get("/events", async (req, res, next) => {
   try {  
-    const events = await JamSession.find().populate('host');
+    const today = new Date();
+    const events = await JamSession.find({date: {$gte: today}}).populate('host');
     res.status(200).json(events);
   } catch (error) {
     console.log(error);
@@ -86,6 +87,11 @@ router.get("/locations/:id", async (req, res, next) => {
   const { id } = req.params;
   try {
     const currentHost = await Host.findById(id).populate('jamSessions');
+    const today = new Date();
+    const onlyUpcomingJams = currentHost.jamSessions.filter((jam) => {
+      return jam.date.getTime() > today.getTime()
+    })
+    currentHost.jamSessions = onlyUpcomingJams
     res.status(200).json(currentHost);
   } catch (error) {
     console.log(error)

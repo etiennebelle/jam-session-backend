@@ -91,10 +91,17 @@ router.post("/jam-sessions", isHostAuthenticated, uploader.single("imageUrl"), a
     const {jamSessionName, date, time, capacity, genre, description, host, players} = req.body;
 
     try {
-        const createdJamSession = await JamSession.create({jamSessionName, date, time, capacity, genre, description, host, image: req.file.path}, players)
-        const hostId = mongoose.Types.ObjectId(host);
-        await Host.findByIdAndUpdate( hostId, {$push: {jamSessions: createdJamSession._id}})
-        res.status(201).json({message: "Jam Session created successfully"});
+        const today = new Date();
+        const formattedDate = new Date(date)
+        if (formattedDate < today) {
+            res.status(405).json({message: "Please select a date in the future"});
+        } else {
+            const createdJamSession = await JamSession.create({jamSessionName, date, time, capacity, genre, description, host, image: req.file.path}, players)
+            const hostId = mongoose.Types.ObjectId(host);
+            await Host.findByIdAndUpdate( hostId, {$push: {jamSessions: createdJamSession._id}})
+            res.status(201).json({message: "Jam Session created successfully"});
+        }
+        
     } catch (error) {
         console.log(error)
         res.status(500).json({ message: "Internal Server Error" })
@@ -131,6 +138,11 @@ router.get('/:id', async(req, res, next) => {
         const { id } = req.params;
         
         const currentHost = await Host.findById(id).populate('jamSessions');
+        const today = new Date();
+        const onlyUpcomingJams = currentHost.jamSessions.filter((jam) => {
+            return jam.date.getTime() > today.getTime()
+            })
+        currentHost.jamSessions = onlyUpcomingJams
         res.status(200).json(currentHost);
 
     } catch (error) {

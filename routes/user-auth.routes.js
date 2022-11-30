@@ -112,6 +112,11 @@ router.get('/:id', isAuthenticated, async(req, res, next) => {
         const { id } = req.params;
         
         const currentUser = await User.findById(id).populate('jamSessions');
+        const today = new Date();
+        const onlyUpcomingJams = currentUser.jamSessions.filter((jam) => {
+            return jam.date.getTime() > today.getTime()
+            })
+        currentUser.jamSessions = onlyUpcomingJams
         res.status(200).json(currentUser);
 
     } catch (error) {
