@@ -124,4 +124,22 @@ router.get('/:id', isAuthenticated, async(req, res, next) => {
     }
 })
 
+// GET Past events
+router.get('/:id/past-jam-sessions', isAuthenticated, async(req, res, next) => {
+    try {
+        const { id } = req.params;
+        
+        const currentUser = await User.findById(id).populate('jamSessions');
+        const today = new Date();
+        const onlyUpcomingJams = currentUser.jamSessions.filter((jam) => {
+            return jam.date.getTime() < today.getTime()
+            })
+        currentUser.jamSessions = onlyUpcomingJams
+        res.status(200).json(currentUser);
+
+    } catch (error) {
+        console.log(error)
+    }
+})
+
 module.exports = router;

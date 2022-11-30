@@ -140,7 +140,25 @@ router.get('/:id', async(req, res, next) => {
         const currentHost = await Host.findById(id).populate('jamSessions');
         const today = new Date();
         const onlyUpcomingJams = currentHost.jamSessions.filter((jam) => {
-            return jam.date.getTime() > today.getTime()
+            return jam.date.getTime() >= today.getTime()
+            })
+        currentHost.jamSessions = onlyUpcomingJams
+        res.status(200).json(currentHost);
+
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+/// GET Past Events
+router.get('/:id/past-jam-sessions', async(req, res, next) => {
+    try {
+        const { id } = req.params;
+        
+        const currentHost = await Host.findById(id).populate('jamSessions');
+        const today = new Date();
+        const onlyUpcomingJams = currentHost.jamSessions.filter((jam) => {
+            return jam.date.getTime() < today.getTime()
             })
         currentHost.jamSessions = onlyUpcomingJams
         res.status(200).json(currentHost);
