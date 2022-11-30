@@ -33,20 +33,23 @@ router.put('/events/:id', isAuthenticated, async (req, res) => {
     const { id } = req.params;
     const body = req.body;
 
-    ////need to check if capacity is reached 
-
     const jamSess = await JamSession.findById(id)
-    console.log('jamSess', jamSess)
-
-    const jamSessPlayers = Array.from(new Set([...jamSess.players.map((player)=>player._id.toString()), body.id]))
     
-    await JamSession.findByIdAndUpdate(id, { players: jamSessPlayers } )
+    ////need to check if capacity is reached
+    if (jamSess.players.length < jamSess.capacity) {
+      const jamSessPlayers = Array.from(new Set([...jamSess.players.map((player)=>player._id.toString()), body.id]))
+      await JamSession.findByIdAndUpdate(id, { players: jamSessPlayers } )
 
-    const user = await User.findById(body.id)
-    const userJamSess = Array.from(new Set([...user.jamSessions.map((jamSess)=>jamSess._id.toString()), id]))
+      const user = await User.findById(body.id)
+      const userJamSess = Array.from(new Set([...user.jamSessions.map((jamSess)=>jamSess._id.toString()), id]))
 
-    await User.findByIdAndUpdate(body.id, { jamSessions: userJamSess } )
-    res.status(200).json({ message: "Player added successfully" })
+      await User.findByIdAndUpdate(body.id, { jamSessions: userJamSess } )
+      res.status(500).json({ message: "Player added successfully" })
+    } else {
+      res.status(200).json({ message: "This jam session is full" })
+    }
+
+    
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal Server Error" })
