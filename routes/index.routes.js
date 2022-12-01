@@ -45,7 +45,7 @@ router.put('/events/:id', isAuthenticated, async (req, res) => {
       const userJamSess = Array.from(new Set([...user.jamSessions.map((jamSess)=>jamSess._id.toString()), id]))
 
       await User.findByIdAndUpdate(body.id, { jamSessions: userJamSess } )
-      res.status(500).json({ message: "Player added successfully" })
+      res.status(200).json({ message: "Player added successfully" })
     } else {
       res.status(200).json({ message: "This jam session is full" })
     }
