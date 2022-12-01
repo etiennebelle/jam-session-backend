@@ -136,7 +136,10 @@ router.put('/jam-sessions/:id', isHostAuthenticated, uploader.single("imageUrl")
 /// DELETE - Delete jam session
 router.delete('/:id', isHostAuthenticated, async (req, res) => {
     const { id } = req.params;
+    const body = req.body;
+    console.log(body)
     await JamSession.findByIdAndDelete(id)
+    await Host.findByIdAndUpdate(body.id, { $pull: { jamSessions: id } })
     res.status(200).json({ message: "Jam Session Deleted successfully" })
 })
 
@@ -152,10 +155,6 @@ router.get('/:id', async(req, res, next) => {
                 { path: 'players' },
             ]
        });
-        
-        
-        /* populate('jamSessions')/* .populate('players') */; 
-        console.log(currentHost)
         const today = new Date();
         const onlyUpcomingJams = currentHost.jamSessions.filter((jam) => {
             return jam.date.getTime() >= today.getTime()
@@ -179,8 +178,7 @@ router.get('/:id/past-jam-sessions', async(req, res, next) => {
             return jam.date.getTime() < today.getTime()
             })
         currentHost.jamSessions = onlyUpcomingJams
-        res.status(200).json(currentHost);
-
+        res.status(200).json(currentHost)
     } catch (error) {
         console.log(error)
     }
