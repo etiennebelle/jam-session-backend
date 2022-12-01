@@ -29,6 +29,15 @@ router.post('/signup', async (req, res, next) => {
             return;
         }
 
+         // check valid password
+         const regex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
+         if (!regex.test(password)) {
+             res
+             .status(400)
+             .json({ message: 'Password needs to have at least 6 chars and must contain at least 1 number, 1 lowercase and 1 uppercase letter.' });
+             return;
+         }
+
         const existingUsername = await User.findOne({ username })
         if (existingUsername) {
             res.status(400).json({ message: 'Username already taken' });

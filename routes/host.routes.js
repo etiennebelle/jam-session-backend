@@ -26,6 +26,15 @@ router.post("/signup", async (req, res) => {
             return;
         }
 
+        // check valid password
+        const regex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
+        if (!regex.test(password)) {
+            res
+            .status(400)
+            .json({ message: 'Password needs to have at least 6 chars and must contain at least 1 number, 1 lowercase and 1 uppercase letter.' });
+            return;
+        }
+
         const salt = genSaltSync(11);
         const hashedPassword = hashSync(password, salt);
     
